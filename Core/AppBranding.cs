@@ -4,7 +4,7 @@ namespace proxy_uid.Core
 {
   public static class AppBranding
   {
-    public const string AppTitle = "TRYHARD";
+    public const string AppTitle = "MANI 272";
     public const string AppSubtitle = "UID Bypass Console";
 
     // Title / labels (no plain white)
