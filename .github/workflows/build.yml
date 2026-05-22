@@ -11,30 +11,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: nuget/setup-nuget@v2
+
       - uses: microsoft/setup-msbuild@v2
 
-      - name: NuGet restore
-        shell: cmd
-        run: |
-          nuget restore proxy-uid.sln -NonInteractive
-          if errorlevel 1 msbuild proxy-uid.sln /t:Restore /p:Configuration=Release /v:minimal
+      - name: Apply branding.config
+        shell: pwsh
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Apply-Branding.ps1 -Root .
 
-      - name: Build EXE (config + Run-Build-Exe.bat)
-        shell: cmd
-        run: scripts\Run-Build-Exe.bat
+      - name: Restore NuGet packages
+        run: nuget restore proxy-uid.sln -NonInteractive
 
-      - name: Show bin output
-        shell: cmd
-        run: |
-          echo === bin\Release ===
-          dir /s /b bin\*.exe 2>nul || echo NO EXE FOUND
-          echo === tree bin ===
-          dir bin /s 2>nul
+      - name: Build Release
+        run: msbuild proxy-uid.sln /p:Configuration=Release /v:minimal /nologo /restore
 
-      - name: Upload real EXE from bin
+      - name: List bin EXE
+        shell: cmd
+        run: dir /s /b bin\*.exe
+
+      - name: Upload EXE from bin
         uses: actions/upload-artifact@v4
         with:
           name: tryhard-exe
           path: |
-            bin/**/*.exe
+            bin/Release/*.exe
+            bin/Debug/*.exe
           if-no-files-found: error
