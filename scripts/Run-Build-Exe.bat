@@ -56,17 +56,16 @@ if errorlevel 1 (
 )
 
 if not exist "!BUILT!" (
-  if exist "%ROOT%bin\Release\TRYHARD UID BYPASS.exe" set "BUILT=%ROOT%bin\Release\TRYHARD UID BYPASS.exe"
-  if exist "%ROOT%bin\Debug\TRYHARD UID BYPASS.exe" set "BUILT=%ROOT%bin\Debug\TRYHARD UID BYPASS.exe"
+  for %%F in ("%ROOT%bin\Release\*.exe") do set "BUILT=%%~fF" & goto :found
+  for %%F in ("%ROOT%bin\Debug\*.exe") do set "BUILT=%%~fF" & goto :found
 )
 
+:found
 if not exist "!BUILT!" (
-  echo [ERROR] Built EXE not found
+  echo [ERROR] bin\Release ya bin\Debug me EXE nahi mila
   exit /b 1
 )
 
-echo [4/4] Copy to dist\!EXE_NAME!
-if not exist "%ROOT%dist" mkdir "%ROOT%dist"
-copy /Y "!BUILT!" "%ROOT%dist\!EXE_NAME!" >nul
-echo [OK] dist\!EXE_NAME!
+echo [4/4] EXE ready — bin folder
+echo [OK] !BUILT!
 exit /b 0
