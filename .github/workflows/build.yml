@@ -2,9 +2,7 @@ name: build
 
 on:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    branches: [main, master, exe-build]
   workflow_dispatch:
 
 jobs:
@@ -13,20 +11,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+      - name: Build EXE (config + Run-Build-Exe.bat)
+        shell: cmd
+        run: scripts\Run-Build-Exe.bat
 
-      - name: Restore NuGet packages
-        run: nuget restore proxy-uid.sln
+      - name: Show bin output
+        shell: cmd
+        run: |
+          echo === bin\Release ===
+          dir bin\Release\*.exe 2>nul || echo (empty)
+          echo === bin\Debug ===
+          dir bin\Debug\*.exe 2>nul || echo (empty)
 
-      - name: Build Release
-        run: msbuild proxy-uid.sln /p:Configuration=Release /v:minimal /nologo
-
-      - name: Upload EXE artifact
+      - name: Upload real EXE from bin
         uses: actions/upload-artifact@v4
         with:
           name: tryhard-exe
           path: |
             bin/Release/*.exe
-            bin/Release/**/*.exe
+            bin/Debug/*.exe
           if-no-files-found: error
