@@ -11,6 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: microsoft/setup-msbuild@v2
+
+      - name: NuGet restore
+        shell: cmd
+        run: |
+          nuget restore proxy-uid.sln -NonInteractive
+          if errorlevel 1 msbuild proxy-uid.sln /t:Restore /p:Configuration=Release /v:minimal
+
       - name: Build EXE (config + Run-Build-Exe.bat)
         shell: cmd
         run: scripts\Run-Build-Exe.bat
@@ -19,15 +27,14 @@ jobs:
         shell: cmd
         run: |
           echo === bin\Release ===
-          dir bin\Release\*.exe 2>nul || echo (empty)
-          echo === bin\Debug ===
-          dir bin\Debug\*.exe 2>nul || echo (empty)
+          dir /s /b bin\*.exe 2>nul || echo NO EXE FOUND
+          echo === tree bin ===
+          dir bin /s 2>nul
 
       - name: Upload real EXE from bin
         uses: actions/upload-artifact@v4
         with:
           name: tryhard-exe
           path: |
-            bin/Release/*.exe
-            bin/Debug/*.exe
+            bin/**/*.exe
           if-no-files-found: error
