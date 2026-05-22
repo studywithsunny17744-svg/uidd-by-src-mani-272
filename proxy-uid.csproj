@@ -8,7 +8,7 @@
     <ProjectGuid>{5D0C1ED7-FAF2-418B-A75C-B096E4117D2D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>proxy_uid</RootNamespace>
-    <AssemblyName>MANI 272 UID BYPASS</AssemblyName>
+    <AssemblyName>proxy_uid</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
