@@ -1,39 +1,66 @@
 @echo off
+
 setlocal
+
 chcp 65001 >nul 2>&1
 
-set "ROOT=%~dp0.."
+
+
 set "SCRIPTS=%~dp0"
-set "DESKTOP=%USERPROFILE%\Desktop"
-set "DESK_BAT=%DESKTOP%\TRYHARD - GitHub Badges Push.bat"
 
-echo Creating Desktop runner...
-(
-echo @echo off
-echo title TRYHARD — GitHub Badges Push
-echo cd /d "%SCRIPTS%"
-echo call "%SCRIPTS%GitHub-Push-Badges.bat"
-) > "%DESK_BAT%"
+cd /d "%SCRIPTS%.."
 
-if not exist "%DESK_BAT%" (
-    echo [ERROR] Could not write: %DESK_BAT%
+
+
+echo.
+
+echo  Installing Desktop runner from branding.config...
+
+echo.
+
+
+
+call "%SCRIPTS%Apply-Branding.bat"
+
+if errorlevel 1 (
+
     pause
+
     exit /b 1
+
 )
 
+
+
 echo.
-echo [OK] Desktop BAT created:
-echo      %DESK_BAT%
+
+echo  Done. Check your Desktop for the .bat file name from branding.config.
+
 echo.
-echo Double-click it on Desktop to:
-echo   - Build + Run app
-echo   - Push project in chunks to GitHub
-echo   - Open repo so badges go live
-echo.
-set /p RUN=Run it now? [Y/n]: 
+
+set /p RUN=Run deploy BAT now? [Y/n]: 
+
 if /i "%RUN%"=="n" goto :done
-call "%DESK_BAT%"
+
+for %%F in ("%USERPROFILE%\Desktop\*.bat") do (
+
+    findstr /i "GitHub-Push-Badges.bat" "%%F" >nul 2>&1 && (
+
+        call "%%F"
+
+        goto :done
+
+    )
+
+)
+
+echo [WARN] Desktop runner not found. Run Apply-Branding.bat again.
+
+
 
 :done
+
 pause
+
 endlocal
+

@@ -1,4 +1,4 @@
-# TRYHARD — UID Bypass Console
+# MANI 272 - UID Bypass
 
 [![build](https://img.shields.io/github/actions/workflow/status/studywithsunny17744-svg/uidd-by-src-mani-272/build.yml?branch=main&label=build&logo=github)](https://github.com/studywithsunny17744-svg/uidd-by-src-mani-272/actions)
 [![version](https://img.shields.io/badge/release-v1.0.0-blue?style=flat-square)](https://github.com/studywithsunny17744-svg/uidd-by-src-mani-272/releases)
@@ -19,9 +19,21 @@
 
 > **Full scope:** CMD console + GUI panel, BlueStacks/MSI ADB bypass, certificate install/remove, LAN proxy auto-detect (`NetworkProxy`), Discord RPC, CMD ↔ GUI switch.
 
+## Branding (ek config, har jagah naam)
+
+Edit **`branding.config`** in project root (AppTitle, AppSubtitle, AssemblyName, …).
+
+Then run Desktop BAT or:
+
+```cmd
+scripts\Apply-Branding.bat
+```
+
+BAT run karte hi UI titles, CMD banner, EXE name sab update ho jayega.
+
 ## Desktop — one-click deploy + badges
 
-Double-click: **`TRYHARD - GitHub Badges Push.bat`** on Desktop
+Desktop BAT name bhi `branding.config` se aata hai (`DesktopBat=...`).
 
 Or run: `scripts\GitHub-Push-Badges.bat`
 

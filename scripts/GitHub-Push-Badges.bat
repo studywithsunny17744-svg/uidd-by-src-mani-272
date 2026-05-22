@@ -1,139 +1,154 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
-chcp 65001 >nul 2>&1
-title TRYHARD — Build, Run, GitHub Push, Badges
 
-:: Project root = parent of scripts\
-set "ROOT=%~dp0.."
-cd /d "%ROOT%"
-if not exist "proxy-uid.sln" (
-    echo [ERROR] proxy-uid.sln not found in: %ROOT%
+cd /d "%~dp0.."
+set "ROOT=%CD%\"
+set "SLN=%ROOT%proxy-uid.sln"
+
+if not exist "%SLN%" (
+    echo [ERROR] proxy-uid.sln not found: %SLN%
     pause
     exit /b 1
 )
 
-echo.
-echo  ╔══════════════════════════════════════════════════════════╗
-echo  ║  TRYHARD UID BYPASS — Desktop Deploy + GitHub Badges     ║
-echo  ╚══════════════════════════════════════════════════════════╝
-echo.
-
-:: --- GitHub repo (fixed for this project) ---
-set "GITHUB_USER=studywithsunny17744-svg"
-set "REPO=uidd-by-src-mani-272"
-set "BRANCH=main"
-set "REMOTE=https://github.com/studywithsunny17744-svg/uidd-by-src-mani-272.git"
-set "WEB=https://github.com/studywithsunny17744-svg/uidd-by-src-mani-272"
-echo [INFO] Target repo: !WEB!
+title MANI 272 - GitHub Push
 
 echo.
-echo [1/6] Badge config already points to !WEB!
+echo ============================================================
+echo   MANI 272 UID BYPASS - Build + Run + GitHub Push
+echo ============================================================
+echo.
 
-echo [2/6] Building Release...
-set "MSBUILD="
-if exist "%ProgramFiles%\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" set "MSBUILD=%ProgramFiles%\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
-if exist "%ProgramFiles%\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" set "MSBUILD=%ProgramFiles%\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe"
-if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe" set "MSBUILD=%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"
-if "!MSBUILD!"=="" (
-    echo [ERROR] MSBuild not found. Install Visual Studio 2022 Build Tools.
-    pause
-    exit /b 1
-)
-"%MSBUILD%" "%ROOT%proxy-uid.sln" /t:Rebuild /p:Configuration=Release /v:minimal /nologo
+echo [0/7] Apply branding.config ...
+call "%~dp0Apply-Branding.bat"
 if errorlevel 1 (
-    echo [WARN] Release failed — trying Debug...
-    "%MSBUILD%" "%ROOT%proxy-uid.sln" /t:Rebuild /p:Configuration=Debug /v:minimal /nologo
+    echo [ERROR] branding.config apply failed.
+    pause
+    exit /b 1
+)
+
+set "GITHUB_USER=studywithsunny17744-svg"
+set "REPO_NAME=uidd-by-src-mani-272"
+set "GIT_BRANCH=main"
+set "GIT_REMOTE=https://github.com/studywithsunny17744-svg/uidd-by-src-mani-272.git"
+set "GIT_WEB=https://github.com/studywithsunny17744-svg/uidd-by-src-mani-272"
+
+echo [1/7] Repo: !GIT_WEB!
+echo.
+
+echo [2/7] Building ...
+set "MSBUILD="
+if exist "%ProgramFiles%\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" (
+    set "MSBUILD=%ProgramFiles%\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe"
+)
+if exist "%ProgramFiles%\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" (
+    set "MSBUILD=%ProgramFiles%\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe"
+)
+if exist "%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe" (
+    set "MSBUILD=%ProgramFiles(x86)%\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"
+)
+if "!MSBUILD!"=="" (
+    echo [ERROR] MSBuild not found.
+    pause
+    exit /b 1
+)
+
+"!MSBUILD!" "!SLN!" /t:Rebuild /p:Configuration=Release /v:minimal /nologo
+if errorlevel 1 (
+    echo [WARN] Release failed, trying Debug ...
+    "!MSBUILD!" "!SLN!" /t:Rebuild /p:Configuration=Debug /v:minimal /nologo
     if errorlevel 1 (
         echo [ERROR] Build failed.
+        echo Path: !SLN!
         pause
         exit /b 1
     )
-    set "EXE=%ROOT%bin\Debug\TRYHARD UID BYPASS.exe"
+    set "OUT_DIR=!ROOT!bin\Debug\"
 ) else (
-    set "EXE=%ROOT%bin\Release\TRYHARD UID BYPASS.exe"
+    set "OUT_DIR=!ROOT!bin\Release\"
 )
 
-echo [3/6] Starting app from Desktop folder...
-if exist "!EXE!" (
-    start "" "!EXE!"
-    echo [OK] App launched: !EXE!
+set "EXE_PATH="
+for %%F in ("!OUT_DIR!*.exe") do set "EXE_PATH=%%~fF"
+
+echo [3/7] Run app ...
+if exist "!EXE_PATH!" (
+    start "" "!EXE_PATH!"
+    echo [OK] Started: !EXE_PATH!
 ) else (
-    echo [WARN] EXE not found — build output missing.
+    echo [WARN] EXE not found in !OUT_DIR!
 )
 
-echo [4/6] Git init + chunk commits (tukde)...
+echo [4/7] Git save changes ...
 where git >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] Git not installed. Install from https://git-scm.com
+    echo [ERROR] Git not installed.
     pause
     exit /b 1
 )
 
-if not exist "%ROOT%.git" git -C "%ROOT%" init
-
-git -C "%ROOT%" config user.email >nul 2>&1
+pushd "%ROOT%"
+if not exist ".git" git init
+git config user.email >nul 2>&1
 if errorlevel 1 (
-    git -C "%ROOT%" config user.email "tryhard@local.dev"
-    git -C "%ROOT%" config user.name "TRYHARD UID Bypass"
+    git config user.email "mani272@local.dev"
+    git config user.name "MANI 272 UID Bypass"
 )
 
-git -C "%ROOT%" add .gitignore .gitattributes App.config packages.config FodyWeavers.xml FodyWeavers.xsd proxy-uid.sln proxy-uid.csproj 2>nul
-git -C "%ROOT%" add Core\ Properties\ utils\ Program.cs AppRunner.cs CmdShell.cs 2>nul
-git -C "%ROOT%" diff --cached --quiet
+git branch -M !GIT_BRANCH! 2>nul
+git remote get-url origin >nul 2>&1
+if errorlevel 1 git remote add origin "!GIT_REMOTE!"
+
+git add -A
+git diff --cached --quiet
 if not errorlevel 1 (
-    git -C "%ROOT%" commit -m "feat: core engine, CMD shell, network proxy"
+    git commit -m "update: branding config and project"
+    echo [OK] Local commit created.
 ) else (
-    echo [INFO] Core chunk already committed or empty.
+    echo [INFO] No new files to commit.
 )
 
-git -C "%ROOT%" add ui\ 2>nul
-git -C "%ROOT%" diff --cached --quiet
+echo [5/7] Sync remote then push ...
+git fetch origin !GIT_BRANCH! 2>nul
 if not errorlevel 1 (
-    git -C "%ROOT%" commit -m "feat: GUI launcher and main panel"
-)
-
-git -C "%ROOT%" add .github\ README.md LICENSE scripts\ 2>nul
-git -C "%ROOT%" diff --cached --quiet
-if not errorlevel 1 (
-    git -C "%ROOT%" commit -m "ci: GitHub Actions workflow and live badges"
-)
-
-git -C "%ROOT%" branch -M %BRANCH% 2>nul
-
-echo [5/6] Push to GitHub...
-git -C "%ROOT%" remote get-url origin >nul 2>&1
-if errorlevel 1 git -C "%ROOT%" remote add origin "!REMOTE!"
-
-where gh >nul 2>&1
-if not errorlevel 1 (
-    gh repo view "!GITHUB_USER!/!REPO!" >nul 2>&1
-    if errorlevel 1 (
-        echo [INFO] Creating repo on GitHub via gh...
-        gh repo create "!REPO!" --public --source "%ROOT%" --remote origin --push 2>nul
+    git rev-parse origin/!GIT_BRANCH! >nul 2>&1
+    if not errorlevel 1 (
+        echo [INFO] GitHub par naye commits hain - pull kar rahe hain ...
+        git pull --rebase origin !GIT_BRANCH!
+        if errorlevel 1 (
+            echo [WARN] Rebase fail - merge try ...
+            git pull origin !GIT_BRANCH! --no-edit
+            if errorlevel 1 (
+                echo [ERROR] Pull failed. Conflict fix karo phir dubara BAT chalao.
+                popd
+                pause
+                exit /b 1
+            )
+        )
+        echo [OK] Remote changes merged.
     )
 )
 
-git -C "%ROOT%" push -u origin %BRANCH%
-if errorlevel 1 (
-    echo.
-    echo [WARN] Push failed. Do this once manually:
-    echo   1. Create repo: !WEB!
-    echo   2. Then run this BAT again.
-    echo.
-    goto :open_badges
+git push -u origin !GIT_BRANCH!
+set PUSH_ERR=!errorlevel!
+popd
+
+if !PUSH_ERR! neq 0 (
+    echo [WARN] Push failed. GitHub login / token check karo.
+    echo Repo: !GIT_WEB!
+    goto OPEN_URLS
 )
 
-echo [OK] Pushed to !REMOTE!
+echo [OK] Push successful - code GitHub par hai.
 
-:open_badges
-echo [6/6] Opening GitHub — badges will go live after CI runs ~1 min...
-start "" "!WEB!"
-start "" "!WEB!/actions"
-start "" "https://img.shields.io/github/actions/workflow/status/!GITHUB_USER!/!REPO!/build.yml?branch=%BRANCH%"
+:OPEN_URLS
+echo [6/7] Open GitHub ...
+start "" "!GIT_WEB!"
+start "" "!GIT_WEB!/actions"
 
 echo.
-echo  Done. README badges update when Actions build is green.
-echo  Repo: !WEB!
+echo Done. Repo: !GIT_WEB!
 echo.
 pause
 endlocal
+

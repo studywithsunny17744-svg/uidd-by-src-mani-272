@@ -71,7 +71,7 @@ namespace proxy_uid.UI
             this._lblTitle.Name = "_lblTitle";
             this._lblTitle.Size = new System.Drawing.Size(209, 23);
             this._lblTitle.TabIndex = 0;
-            this._lblTitle.Text = "TRYHARD ·  ALL SERCER";
+            this._lblTitle.Text = "MANI 272 - ALL SERCER";
             // 
             // _btnClose
             // 
@@ -341,7 +341,7 @@ namespace proxy_uid.UI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TRYHARD - GUI";
+this.Text = "MANI 272 - GUI";
             this._titleBar.ResumeLayout(false);
             this._titleBar.PerformLayout();
             this.grpSettings.ResumeLayout(false);

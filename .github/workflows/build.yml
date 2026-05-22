@@ -16,6 +16,9 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
 
+      - name: Apply branding.config
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Apply-Branding.ps1 -Root .
+
       - name: Restore NuGet packages
         run: nuget restore proxy-uid.sln
 

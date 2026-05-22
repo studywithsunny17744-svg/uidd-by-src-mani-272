@@ -54,13 +54,13 @@ namespace proxy_uid.UI
             // _title
             // 
             this._title.BackColor = System.Drawing.Color.Transparent;
-            this._title.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+            this._title.Font = new System.Drawing.Font("Tahoma", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this._title.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(212)))), ((int)(((byte)(255)))));
             this._title.Location = new System.Drawing.Point(20, 36);
             this._title.Name = "_title";
             this._title.Size = new System.Drawing.Size(380, 40);
             this._title.TabIndex = 0;
-            this._title.Text = "TRYHARD";
+            this._title.Text = "MANI 272";
             this._title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // _subtitle
@@ -81,7 +81,7 @@ namespace proxy_uid.UI
             this._linkGitHub.BackColor = System.Drawing.Color.Transparent;
             this._linkGitHub.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this._linkGitHub.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(220)))));
-            this._linkGitHub.Location = new System.Drawing.Point(20, 258);
+            this._linkGitHub.Location = new System.Drawing.Point(20, 333);
             this._linkGitHub.Name = "_linkGitHub";
             this._linkGitHub.Size = new System.Drawing.Size(380, 20);
             this._linkGitHub.TabIndex = 5;
@@ -145,7 +145,7 @@ namespace proxy_uid.UI
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "LauncherForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "TRYHARD";
+            this.Text = "MANI 272";
             this._panel.ResumeLayout(false);
             this.ResumeLayout(false);
 
