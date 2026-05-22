@@ -5,6 +5,7 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,3 +21,12 @@ jobs:
 
       - name: Build Release
         run: msbuild proxy-uid.sln /p:Configuration=Release /v:minimal /nologo
+
+      - name: Upload EXE artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tryhard-exe
+          path: |
+            bin/Release/*.exe
+            bin/Release/**/*.exe
+          if-no-files-found: error
