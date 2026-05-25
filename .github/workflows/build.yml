@@ -19,6 +19,10 @@ jobs:
         shell: pwsh
         run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Apply-Branding.ps1 -Root .
 
+      - name: Clean old bin (purani default EXE hatao)
+        shell: cmd
+        run: if exist bin rmdir /s /q bin
+
       - name: Restore NuGet packages
         run: nuget restore proxy-uid.sln -NonInteractive
 
